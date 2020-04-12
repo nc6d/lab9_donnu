@@ -179,9 +179,7 @@ def reversed_shell_sort(arr):
     return num_swaps, num_comps
 
 
-def heapify(arr, len_arr, i):
-    global num_swaps
-    global num_comps
+def heapify(arr, len_arr, i, num_swaps, num_comps):
     maxima = i
     l = 2 * i + 1
     r = 2 * i + 2
@@ -194,25 +192,25 @@ def heapify(arr, len_arr, i):
     if maxima != i:
         num_swaps += 1
         arr[i], arr[maxima] = arr[maxima], arr[i]
-        heapify(arr, len_arr, maxima)
+        num_swaps, num_comps = heapify(arr, len_arr, maxima, num_swaps, num_comps)
+    return num_swaps, num_comps
 
 
 def heap_sort(arr):
-    global num_swaps
-    global num_comps
+    num_swaps = 0
+    num_comps = 0
     len_arr = len(arr)
-    heapify(arr, len_arr, 0)
+    heapify(arr, len_arr, 0, num_swaps, num_comps)
     for i in range(len_arr, -1, -1):
-        heapify(arr, len_arr, i)
+        num_swaps, num_comps = heapify(arr, len_arr, i, num_swaps, num_comps)
     for i in range(len_arr - 1, 0, -1):
         num_swaps += 1
         arr[i], arr[0] = arr[0], arr[i]
-        heapify(arr, i, 0)
+        heapify(arr, i, 0, num_swaps, num_comps)
+    return num_swaps, num_comps
 
 
-def reversed_heapify(arr, len_arr, i):
-    global num_swaps
-    global num_comps
+def reversed_heapify(arr, len_arr, i, num_swaps, num_comps):
     minima = i
     l = 2 * i + 1
     r = 2 * i + 2
@@ -225,20 +223,22 @@ def reversed_heapify(arr, len_arr, i):
     if minima != i:
         num_swaps += 1
         arr[i], arr[minima] = arr[minima], arr[i]
-        reversed_heapify(arr, len_arr, minima)
+        num_swaps, num_comps = reversed_heapify(arr, len_arr, minima, num_swaps, num_comps)
+    return num_swaps, num_comps
 
 
 def reversed_heap_sort(arr):
-    global num_swaps
-    global num_comps
+    num_swaps = 0
+    num_comps = 0
     len_arr = len(arr)
     for i in range(len_arr // 2 - 1, -1, -1):
-        reversed_heapify(arr, len_arr, i)
+        num_swaps, num_comps = reversed_heapify(arr, len_arr, i, num_swaps, num_comps)
     for i in range(len_arr - 1, -1, -1):
         num_swaps += 1
         arr[0], arr[i] = arr[i], arr[0]
 
-        reversed_heapify(arr, i, 0)
+        reversed_heapify(arr, i, 0, num_swaps, num_comps)
+    return num_swaps, num_comps
 
 
 flag = input("If you wanna randomize entered data, press 'Enter'. To enter manually press any other key: ")
@@ -291,7 +291,7 @@ elif func_check == '4':
         name = 'CocktailSort Ascending function: '
     else:
         num_comps, num_swaps = reversed_cocktail_sort(arr)
-        name = 'InsertionSort Descending function: '
+        name = 'CocktailSort Descending function: '
 elif func_check == '5':
     reverse_check = input('Choose the sort order: \n 1.Ascending \n 2.Descending \n')
     if reverse_check == '1':
@@ -299,18 +299,14 @@ elif func_check == '5':
         name = 'ShellSort Ascending function: '
     else:
         num_comps, num_swaps = reversed_shell_sort(arr)
-        name = 'InsertionSort Descending function: '
+        name = 'ShellSort Descending function: '
 elif func_check == '6':
     reverse_check = input('Choose the sort order: \n 1.Ascending \n 2.Descending \n')
     if reverse_check == '1':
-        num_swaps = 0
-        num_comps = 0
-        heap_sort(arr)
+        num_swaps, num_comps = heap_sort(arr)
         name = 'HeapSort Ascending function: '
     else:
-        num_swaps = 0
-        num_comps = 0
-        reversed_heap_sort(arr)
+        num_swaps, num_comps = reversed_heap_sort(arr)
         name = 'HeapSort Descending function: '
 
 len_arr = len(arr)
